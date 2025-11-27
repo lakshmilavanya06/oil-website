@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Sri Rama Oils</title>
+    <link rel="stylesheet" href="products.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-circle">
+                <img src="img/bull.png" alt="Ram Logo">
+            </div>
+            <span>Jai Shri Ram Bull-Driven Oils</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="products.html" class="active">Products</a></li>
+            <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <section class="product-section">
+        <h1 class="section-title">Our Products</h1>
+        <div class="products-grid" id="productsGrid">
+            </div>
+    </section>
+ <footer class="custom-footer">
+    <div class="footer-content">
+        <h3 class="footer-title">Jai Shri Ram Bull-Driven Oils</h3>
+
+        <p><strong>Mobile:</strong>
+            <a href="tel:+917095924929">+91 70959 24929</a>
+        </p>
+        <p><strong>Whatsapp</strong>
+            <a href="https://wa.me/917095924929">
+        Contact on WhatsApp
+    </a>
+        </p>
+
+        <p><strong>Email:</strong>
+            <a href="mailto:jaishrirambulldrivenoils@gmail.com">
+                jaishrirambulldrivenoils@gmail.com
+            </a>
+        </p>
+
+        <p><strong>Location:</strong>
+            <a href="https://www.google.com/maps/place/Jai+sriram+bull+driven+oils/" target="_blank">
+                View on Google Maps
+            </a>
+        </p>
+
+        <p class="copyright">&copy; 2025 Jai Shri Ram Bull-Driven Oils</p>
+    </div>
+</footer>
+
+
+    <script>
+        const products = [
+            { id: 1, name: "Groundnut Oil (1L)", price: 590, img:"./img/groundnut.png" },
+            { id: 2, name: "White Sesame Oil (1L)", price: 320, img: "./img/whitesesame.png" },
+            { id: 3, name: "Coconut Oil (500ml)", price: 795, img: "./img/coconut.png" },
+            { id: 4, name: "Black Sesame Oil (1L)", price: 320, img: "./img/blackses.png" },
+            { id: 5, name: "Safflower seeds Oil (1L)", price: 320, img: "./img/safflower.png" },
+            { id: 6, name: "Mustard Oil (1L)", price: 210, img: "./img/mustard.png" }
+        ];
+
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            products.forEach(p => {
+                const card = `
+                    <div class="product-card">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p class="price">₹${p.price}</p>
+                        <button onclick="addToCart(${p.id})">Add to Cart</button>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+            updateCartCount();
+        }
+
+        function addToCart(id) {
+            let cart = JSON.parse(localStorage.getItem('sriRamaCart')) || [];
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            localStorage.setItem('sriRamaCart', JSON.stringify(cart));
+            alert("Added " + product.name + " to cart!");
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('sriRamaCart')) || [];
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
