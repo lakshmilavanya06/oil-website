@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+hey, what happens on clicking checkout and pay in cart.html <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -121,11 +121,12 @@ const countryStates = {
 };
 
 function populateStates() {
+    const country = document.getElementById("customer-country").value;
     const stateSelect = document.getElementById("customer-state");
     stateSelect.innerHTML = "<option value=''>Select State</option>";
-    const states = countryStates[customer-country.value];
-    if(states) {
-        states.forEach(s => {
+
+    if(countryStates[country]) {
+        countryStates[country].forEach(s => {
             const opt = document.createElement("option");
             opt.value = s;
             opt.textContent = s;
@@ -142,6 +143,7 @@ function loadCart() {
     let total = 0;
 
     tbody.innerHTML = "";
+
     if(cart.length === 0) {
         empty.style.display = "block";
         return;
@@ -160,6 +162,7 @@ function loadCart() {
                 <td><button onclick="removeItem(${i})">X</button></td>
             </tr>`;
     });
+
     document.getElementById("grand-total").innerText = total;
 }
 
@@ -185,17 +188,27 @@ function proceedUPIPayment() {
     const cart = JSON.parse(localStorage.getItem("sriRamaCart")) || [];
     if(cart.length === 0) return alert("Cart is empty");
 
-    const name = customer-name.value.trim();
-    const contact = customer-contact.value.trim();
-    const address = customer-address.value.trim();
-    if(!name || !contact || !address) return alert("Fill delivery details");
+    const name = document.getElementById("customer-name").value.trim();
+    const contact = document.getElementById("customer-contact").value.trim();
+    const address = document.getElementById("customer-address").value.trim();
+
+    if(!name || !contact || !address) {
+        alert("Fill delivery details");
+        return;
+    }
 
     const orderId = generateOrderId();
     const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+
     const upiLink = `upi://pay?pa=709592492@ybl&pn=JaiSriRamOils&am=${total}&cu=INR`;
 
-    const msg = `Order ID: ${orderId}\nAmount: ₹${total}\nName: ${name}\nContact: ${contact}\nAddress: ${address}`;
-    window.open(`https://wa.me/917095924929?text=${encodeURIComponent(msg)}`);
+    const msg = `Order ID: ${orderId}
+Amount: ₹${total}
+Name: ${name}
+Contact: ${contact}
+Address: ${address}`;
+
+    window.open(`https://wa.me/917095924929?text=${encodeURIComponent(msg)}`, "_blank");
 
     document.getElementById("payment-section").innerHTML =
         `<a href="${upiLink}" target="_blank" class="checkout-btn">Pay ₹${total} via UPI</a>`;
